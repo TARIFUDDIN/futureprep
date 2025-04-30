@@ -242,7 +242,7 @@ export const AIModel = async (topic, coachingOption, conversation) => {
             
             while (attempts < MAX_ATTEMPTS) {
                 const completion = await openai.chat.completions.create({
-                    model: "google/gemini-pro",
+                    model: "google/gemini-2.5-pro-preview-03-25",
                     messages,
                     temperature: temp,
                     max_tokens: maxTokens
@@ -534,7 +534,7 @@ export const AIModelToGenerateFeedbackAndNotes = async (coachingOption, conversa
         
         while (summaryAttempts < 2) {
             const completion = await openai.chat.completions.create({
-                model: "google/gemini-pro",
+                model: "google/gemini-2.5-pro-preview-03-25",
                 messages: [
                     {
                         role: 'system',
