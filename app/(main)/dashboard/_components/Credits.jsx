@@ -9,7 +9,6 @@ import { Loader2Icon, Wallet2 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
- // Make sure you have this import
 
 function Credits() {
     const { userData } = useContext(UserContext);
@@ -18,14 +17,11 @@ function Credits() {
     const updateUserOrder = useMutation(api.users.UpdateUserToken);
     
     const CalculateProgress = () => {
-        // Make sure credits exists and is a number
         const credits = Number(userData?.credit || 0);
         
         if (userData?.subscriptionId) {
-          // For paid plan (50,000 tokens)
           return (credits / 50000) * 100;
         } else {
-          // For free plan (5,000 tokens)
           return (credits / 5000) * 100;
         }
     }
@@ -34,7 +30,7 @@ function Credits() {
         const script = document.createElement("script");
         script.src = "https://checkout.razorpay.com/v1/checkout.js";
         script.async = true;
-        script.onload = () => console.log(true); // Ensure script is loaded
+        script.onload = () => console.log(true);
         document.body.appendChild(script);
     
         return () => {
@@ -60,7 +56,6 @@ function Credits() {
     };
     
     const MakePayment = (subscriptionId) => {
-        // Make sure subscriptionId is defined
         if (!subscriptionId) {
             console.error("No subscription ID provided");
             return;
@@ -78,17 +73,14 @@ function Credits() {
               
               if (resp?.razorpay_payment_id) {
                   try {
-                      // Make sure you have a valid ID and current credit value
                       if (!userData?._id) {
                           console.error("User ID not found");
                           return;
                       }
                       
-                      // Calculate new credit amount
                       const currentCredit = Number(userData?.credit || 0);
-                      const newCredit = currentCredit + 50000; // Add 50k tokens
+                      const newCredit = currentCredit + 50000;
                       
-                      // Call the mutation with the correct parameters
                       await updateUserOrder({
                           id: userData._id,
                           credit: newCredit,
@@ -115,25 +107,22 @@ function Credits() {
         const rzp = new window.Razorpay(options);
         rzp.open();
     };
-  
 
     const cancelSubscription = async () => {
       try {
           setLoading(true);
           
-          // Log the actual subscription details
           console.log("User Data Full:", userData);
           console.log("Subscription ID to cancel:", userData?.subscriptionId);
           console.log("Order ID:", user?.orderId);
-  
-          // Prefer subscriptionId from userData, fall back to orderId if needed
+
           const subIdToCancel = userData?.subscriptionId || user?.orderId;
-  
+
           if (!subIdToCancel) {
               toast.error('No active subscription found');
               return;
           }
-  
+
           const result = await axios.post('/api/cancel-subscription', {
               subId: subIdToCancel
           });
@@ -141,11 +130,10 @@ function Credits() {
           if (result.data.success) {
               toast.success('Subscription successfully canceled');
               
-              // Update user data to remove subscription
               await updateUserOrder({
                   id: userData._id,
                   subscriptionId: null,
-                  credit: 5000  // Reset to free plan credits
+                  credit: 5000
               });
               
               window.location.reload();
@@ -165,55 +153,83 @@ function Credits() {
   }
     
     return (
-        <div>
-            <div className="flex items-center gap-3 p-4 bg-black text-white rounded-lg shadow-lg">
+        <div className="bg-white dark:bg-gray-900 p-4 rounded-lg space-y-4">
+            {/* User Profile Section */}
+            <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg">
                 <Image 
                     src={user?.profileImageUrl} 
                     width={50} 
                     height={50} 
-                    className="rounded-full border border-gray-500"
+                    className="rounded-full border-2 border-white"
                     alt="User Profile"
                 />
                 <div className="space-y-1">
                     <h2 className="text-lg font-bold">{user?.displayName}</h2>
-                    <p className="text-sm text-gray-400">{user?.primaryEmail}</p>
+                    <p className="text-sm text-blue-100">{user?.primaryEmail}</p>
                 </div>
             </div>
-            <hr className="my-3" />
 
-            <div>
-                <h4 className="text-sm font-semibold">Token Usage</h4>
-                <p className="text-xs text-gray-400">
+            {/* Token Usage Section */}
+            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Token Usage</h4>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
                     {userData?.credit || 0}/{userData?.subscriptionId ? '50,000' : '5,000'}
                 </p>
-                <progress 
+                <Progress 
                     value={CalculateProgress()} 
-                    max="100"
-                    className="w-full my-2 appearance-none [&::-webkit-progress-bar]:bg-green-700 [&::-webkit-progress-value]:bg-green-400 [&::-moz-progress-bar]:bg-green-400"
+                    className="w-full mb-3"
                 />
 
                 <div className="flex justify-between items-center">
-                    <h4 className="font-bold">Current Plan</h4>
-                    <h4 className="p-1 bg-secondary rounded-lg px-2">{userData?.subscriptionId ? 'Paid Plan' : 'Free Plan'}</h4>
+                    <h4 className="font-bold text-gray-800 dark:text-gray-200">Current Plan</h4>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        userData?.subscriptionId 
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                            : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                    }`}>
+                        {userData?.subscriptionId ? 'Pro Plan' : 'Free Plan'}
+                    </span>
                 </div>
             </div>
+
+            {/* Upgrade/Cancel Section */}
             {!userData?.subscriptionId ? (
-  <div className='mt-5 p-5 border rounded-2xl'>
-    <div className='flex justify-between'>
-      <div>
-        <h4 className='font-bold'>Pro Plan</h4>
-        <h4>50,000 Tokens</h4>
-      </div>
-      <h4 className='font-bold'>$10/Month</h4>
-    </div>
-    <hr className='my-3' />
-    <Button className='w-full' disabled={loading} onClick={GenerateSubscriptionId}>
-      {loading ? <Loader2Icon className='animate-spin' /> : <Wallet2 />} Upgrade $10
-    </Button>
-  </div>
-) : (
-  <Button className='mt-4 w-full' onClick={cancelSubscription}>Cancel Subscription</Button>
-)}
+                <div className='bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 p-5 border border-purple-200 dark:border-purple-700 rounded-xl'>
+                    <div className='flex justify-between items-start mb-4'>
+                        <div>
+                            <h4 className='font-bold text-lg text-gray-800 dark:text-gray-200'>Pro Plan</h4>
+                            <p className='text-gray-600 dark:text-gray-400'>50,000 Tokens</p>
+                        </div>
+                        <div className='text-right'>
+                            <h4 className='font-bold text-xl text-purple-600 dark:text-purple-400'>$10</h4>
+                            <p className='text-sm text-gray-500 dark:text-gray-400'>/Month</p>
+                        </div>
+                    </div>
+                    <hr className='my-3 border-purple-200 dark:border-purple-700' />
+                    <Button 
+                        className='w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium' 
+                        disabled={loading} 
+                        onClick={GenerateSubscriptionId}
+                    >
+                        {loading ? (
+                            <Loader2Icon className='animate-spin mr-2' />
+                        ) : (
+                            <Wallet2 className='mr-2' />
+                        )} 
+                        Upgrade to Pro
+                    </Button>
+                </div>
+            ) : (
+                <Button 
+                    variant="destructive" 
+                    className='w-full' 
+                    disabled={loading}
+                    onClick={cancelSubscription}
+                >
+                    {loading ? <Loader2Icon className='animate-spin mr-2' /> : null}
+                    Cancel Subscription
+                </Button>
+            )}
         </div>
     );
 }

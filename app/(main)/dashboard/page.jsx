@@ -12,7 +12,6 @@ const Dashboard = () => {
         <Feedback/>
       </div>
     </div>
-
   )
 }
 
