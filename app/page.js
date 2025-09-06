@@ -234,28 +234,28 @@ const Index = () => {
     {
       quote: "FuturePrep transformed my interview confidence completely. The AI feedback was incredibly detailed and helped me land my dream role at Google. The voice agents feel so natural!",
       author: "Jishan Ali",
-      role: "Software Engineer at Google",
+      role: "Quality Assurance Test Engineer at Accenture",
       avatar: "/api/placeholder/150/150",
       rating: 5
     },
     {
       quote: "As someone learning Spanish, the AI conversation practice is phenomenal. It's patient, corrects my pronunciation gently, and adapts to my learning pace perfectly.",
       author: "Deep Ghosal",
-      role: "Graduate Student at MIT",
+      role: "ASE at Accenture",
       avatar: "/api/placeholder/150/150",
       rating: 5
     },
     {
       quote: "I recommend FuturePrep to all my students. The personalized learning paths and instant feedback are revolutionizing how we approach education in the digital age.",
       author: "Dr. Soumya Sen",
-      role: "Professor at Stanford University",
+      role: "Professor at Calcutta University",
       avatar: "/api/placeholder/150/150",
       rating: 5
     },
     {
       quote: "The mock interviews were crucial for my career transition. I practiced data science scenarios I'd never encountered and felt completely prepared for anything.",
       author: "Wazib Ansar",
-      role: "Senior Data Scientist",
+      role: "Assistant Professor at Calcutta University",
       avatar: "/api/placeholder/150/150",
       rating: 5
     }
@@ -281,13 +281,6 @@ const Index = () => {
       avatar: "/api/placeholder/150/150",
       social: { linkedin: "#", twitter: "#", github: "#" }
     },
-    {
-      name: "Koulik Jana",
-      role: "Chief Technology Officer",
-      bio: "Former engineering lead at top tech companies, specializing in speech synthesis, voice AI, and scalable distributed systems architecture.",
-      avatar: "/api/placeholder/150/150",
-      social: { linkedin: "#", twitter: "#", github: "#" }
-    }
   ];
 
   const stats = [
@@ -686,7 +679,7 @@ const Index = () => {
               
               <div className="flex items-center space-x-6 mt-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-indigo-600">50K+</div>
+                  <div className="text-3xl font-bold text-indigo-600">100+</div>
                   <div className="text-sm text-slate-600">Students Helped</div>
                 </div>
                 <div className="text-center">
@@ -870,7 +863,7 @@ const Index = () => {
               <ul className="space-y-3">
                 <li className="flex items-center text-slate-300">
                   <Mail className="h-4 w-4 text-indigo-400 mr-2" />
-                  <span>hello@futureprep.ai</span>
+                  <span>rafiuddin.tarif@gmail.com</span>
                 </li>
                 <li className="flex items-center text-slate-300">
                   <Globe className="h-4 w-4 text-indigo-400 mr-2" />
